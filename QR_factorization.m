@@ -1,3 +1,6 @@
+close all
+clear
+clc
 % 数据初始化。
 A = [1 2 3 4; 1 4 5 6; 1 5 6 7; 1 8 9 10; 1 11 12 13];
 B = [1 2 3 1 4; 1 4 1 6 6; 1 5 6 7 5; 1 8 9 10 1; 1 6 2 6 3];
@@ -14,10 +17,10 @@ p = zeros(m, n);
 Q = zeros(m, n);
 R = zeros(m, n);
 for i = 1:n
-    if i == 1    
-        p(:, i) = A(:, i)
+    if i == 1
+        p(:, i) = A(:, i);
         Q(:, i) = p(:, i)/norm(p(:, i), 2);
-        R(1, 1) = norm(p(:, i), 2);  
+        R(1, 1) = norm(p(:, i), 2);
     else
         temp = zeros(n, 1);
         for j = 1:i-1
@@ -27,8 +30,8 @@ for i = 1:n
         end
         p(:, i) = A(:, i) - temp;
         Q(:, i) = p(:, i) / norm(p(:, i), 2);
-        R(i, i) = norm(p(:, i), 2); 
-    end    
+        R(i, i) = norm(p(:, i), 2);
+    end
 end
 end
 % 基于householder矩阵的列主元的QR分解算法。
@@ -62,7 +65,7 @@ Q=Q';
 R=A;
 end
 % 对x的householder矩阵构造算法。
-function [H]=hst(x)                 
+function [H]=hst(x)
 xmod=sqrt(x' * x);
 alpha=-sign(x(1))*xmod;
 x(1)=x(1)+alpha;
