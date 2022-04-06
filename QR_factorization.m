@@ -1,12 +1,9 @@
-close all
-clear
-clc
 % 数据初始化。
 A = [1 2 3 4; 1 4 5 6; 1 5 6 7; 1 8 9 10; 1 11 12 13];
 B = [1 2 3 1 4; 1 4 1 6 6; 1 5 6 7 5; 1 8 9 10 1; 1 6 2 6 3];
 % [q r] = qrs(B)
 % [q r] = qrg(B)
-[q,r,p] = qrd(A)
+[q,r,p] = qrd(B)
 % 利用命令行输入语句：
 % A = input('请输入原始矩阵：')
 
@@ -18,9 +15,9 @@ Q = zeros(m, n);
 R = zeros(m, n);
 for i = 1:n
     if i == 1    
-        p(:, i) = A(:, i); 
-        Q(:, i) = p(:, i) / norm(p(:, i), 2); 
-        R(1, 1) = norm(p(:, i), 2); 
+        p(:, i) = A(:, i);
+        Q(:, i) = p(:, i)/norm(p(:, i), 2);
+        R(1, 1) = norm(p(:, i), 2);  
     else
         temp = zeros(n, 1);
         for j = 1:i-1
@@ -40,7 +37,7 @@ function [Q,R,p] = qrd(A)
 Q = eye(m);
 p = eye(n);
 for j=1:n
-    c(j) = chengfa(A(1:m,j)',A(1:m,j));
+    c(j) = A(1:m,j)' * A(1:m,j);
 end
 [cr,r]=max(c);
 for k=1:n-1
@@ -52,9 +49,9 @@ for k=1:n-1
     % 交换列使首列范数最大。
     A(1:m,[k r])=A(1:m,[r k]);
     H=hst(A(k:m,k));
-    A(k:m,k:n)=chengfa(H,A(k:m,k:n));
+    A(k:m,k:n)=H * A(k:m,k:n);
     H_t(k:end,k:end)=H;
-    Q=chengfa(H_t,Q);
+    Q = H_t * Q;
     for j=k+1:n
         c(j)=c(j)-A(k,j)^2;
     end
@@ -66,11 +63,11 @@ R=A;
 end
 % 对x的householder矩阵构造算法。
 function [H]=hst(x)                 
-xmod=sqrt(chengfa(x',x));
+xmod=sqrt(x' * x);
 alpha=-sign(x(1))*xmod;
 x(1)=x(1)+alpha;
-u=x/sqrt(sum(chengfa(x',x)));
-H=eye(length(x))-2*chengfa(u,u');
+u=x/sqrt(sum(x' * x));
+H=eye(length(x))-2*(u * u');
 end
 % 基于Givens变化的QR分解算法（只能用于方阵，且没有列主元）。
 function [Q,R]=qrg(A)
@@ -91,27 +88,14 @@ for j=1:N-1
         temp(i,i)=c;
         temp(i,1)=-s;
         temp(1,i)=s;
-        b=chengfa(temp,b);
-        Tj=chengfa(temp,Tj);
+        b = temp * b;
+        Tj = temp * Tj;
     end
-    B=chengfa(Tj,B);
+    B = Tj * B;
     R(j,j:end)=B(1,:);
     T_t(j:end,j:end)=Tj;
-    T=chengfa(T_t,T);
+    T = T_t * T;
 end
 R(j+1,j+1:end)=B(end,end);
 Q=T';
-end
-
-function [C]=chengfa(A,B)
-a=size(A);
-b=size(B);
-C=zeros(a(1),b(2));
-for i=1:a(1)
-    for j=1:b(2)
-        for k=1:a(2)
-            C(i,j)=C(i,j)+A(i,k)*B(k,j);
-        end
-    end
-end
 end
