@@ -19,7 +19,7 @@ R = zeros(m, n);
 for i = 1:n
     if i == 1    
         p(:, i) = A(:, i);
-        Q(:, i) = p(:, i)/norm(p(:, i), 2);
+        Q(:, i) = p(:, i) / norm(p(:, i), 2);
         R(1, 1) = norm(p(:, i), 2);  
     else
         temp = zeros(n, 1);
