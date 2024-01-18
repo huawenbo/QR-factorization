@@ -2,16 +2,18 @@ close all
 clear
 clc
 
-% 数据初始化。
+
+% Data initialization.
 A = [1 2 3 4; 1 4 5 6; 1 5 6 7; 1 8 9 10; 1 11 12 13];
 B = [1 2 3 1 4; 1 4 1 6 6; 1 5 6 7 5; 1 8 9 10 1; 1 6 2 6 3];
 % [q r] = qrs(B)
 % [q r] = qrg(B)
 [q,r,p] = qrd(B)
-% 利用命令行输入语句：
-% A = input('请输入原始矩阵：')
+% Use the command line for input.
+% A = input('please input the source matrix: ')
 
-% 基于Gran-Schmidt正交化方法，适用于满秩的方阵（非奇异矩阵）
+
+% The algorithm based on Gran-Schmidt orthogonalization for square matrices with full rank (non-singular matrices): 
 function [Q, R] = qrs(A)
 [m, n] = size(A);
 p = zeros(m, n);
@@ -35,7 +37,9 @@ for i = 1:n
     end
 end
 end
-% 基于householder矩阵的列主元的QR分解算法。
+
+
+% The algorithm based on the column principal elements of the householder matrix.
 function [Q,R,p] = qrd(A)
 [m,n] = size(A);
 Q = eye(m);
@@ -48,9 +52,9 @@ for k=1:n-1
     H_t=eye(m);
     if(cr<=0),break;end
     c([k r])=c([r k]);
-    % p记录了原始矩阵的列交换信息。
+    % The parameter p records the column swapping information of the original matrix.
     p(:,[k r])=p(:,[r k]);
-    % 交换列使首列范数最大。
+    % Swap columns to maximize the first column paradigm.
     A(1:m,[k r])=A(1:m,[r k]);
     H=hst(A(k:m,k));
     A(k:m,k:n)=H * A(k:m,k:n);
@@ -65,7 +69,8 @@ end
 Q=Q';
 R=A;
 end
-% 对x的householder矩阵构造算法。
+
+% The algorithm for householder matrix construction for x.
 function [H]=hst(x)
 xmod=sqrt(x' * x);
 alpha=-sign(x(1))*xmod;
@@ -73,7 +78,9 @@ x(1)=x(1)+alpha;
 u=x/sqrt(sum(x' * x));
 H=eye(length(x))-2*(u * u');
 end
-% 基于Givens变化的QR分解算法（只能用于方阵，且没有列主元）。
+
+
+% The algorithm based on Givens variation (only used for square arrays and has no column primitives).
 function [Q,R]=qrg(A)
 [N,M]=size(A);
 R=zeros(N);
